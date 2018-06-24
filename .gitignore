@@ -1,0 +1,11 @@
+# Ignore all files
+# *
+
+# Except this one
+# !board_pinout.gif
+# !stm32f1xx_clock_configuration.png
+# !README.md
+# !LICENSE
+# !examples/
+# !lib/
+
