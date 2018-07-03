@@ -69,7 +69,7 @@ uint32_t systimer_get(void)/*{{{*/
 {
   return g_systimer;
 }/*}}}*/
-uint8_t timeout_flag_systimer(uint32_t current_time, uint32_t period)/*{{{*/
+uint8_t systimer_timeout_flag(uint32_t current_time, uint32_t period)/*{{{*/
 {
   uint32_t time = g_systimer;
   uint8_t systimer_status = 0x00;
