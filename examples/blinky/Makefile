@@ -9,7 +9,7 @@ STM_COMMON = /home/semir/.stm/Libraries/STM32F1
 
 # Put your local source files here (or *.c, etc)
 SRCS = main.c 
-SRCS += system_stm32f1xx.c 
+# SRCS += system_stm32f1xx.c 
 SRCS +=
 
 # Here you can link to one more directory (and multiple .c files)
@@ -18,9 +18,17 @@ EXTRA_SOURCE_FILES = delay.c
 EXTRA_SOURCE = $(addprefix $(EXTRA_SOURCE_DIR), $(EXTRA_SOURCE_FILES))
 SRCS += $(EXTRA_SOURCE) 
 
+# Defining core configuration for your project
+CORE_SOURCE_DIR = ../../lib/core/
+CORE_SOURCE_FILES = system_stm32f1xx.c
+CORE_SOURCE = $(addprefix $(CORE_SOURCE_DIR), $(CORE_SOURCE_FILES))
+SRCS += $(CORE_SOURCE) 
+# LINK = stm32_flash.ld
+LINK = $(addprefix $(CORE_SOURCE_DIR), stm32_flash.ld )
+# STARTUP = startup_stm32f103xb.s
+STARTUP = $(addprefix $(CORE_SOURCE_DIR), startup_stm32f103xb.s)
 
 MCPU = cortex-m3
-STARTUP = startup_stm32f103xb.s
 
 
 # Normally you shouldn't need to change anything below this line!
@@ -35,12 +43,12 @@ CC = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 SIZE = arm-none-eabi-size
 
-CFLAGS  = -g -O2 -Wall -Tstm32_flash.ld 
+CFLAGS  = -g -O2 -Wall -T$(LINK)
 CFLAGS += -mlittle-endian -mthumb -mcpu=$(MCPU) -mthumb-interwork
 # important flag is -fsingle-precision-constant which prevents the double precision emulation
 # CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant
 # CFLAGS += -mfloat-abi=hard 
-CFLAGS += -I. -I$(EXTRA_SOURCE_DIR)
+CFLAGS += -I. -I$(EXTRA_SOURCE_DIR) -I$(CORE_SOURCE_DIR)
 
 # Include files from STM libraries
 #CFLAGS += -I$(STM_COMMON)/Utilities/STM32F4-Discovery
@@ -50,7 +58,7 @@ CFLAGS += -I$(STM_COMMON)/CMSIS/Device/ST/STM32F1xx/Include
 # CFLAGS += -I$(STM_COMMON)/STM32F1xx/Include
 
 # add startup file to build
-SRCS += startup_stm32f103xb.s 
+SRCS += $(STARTUP) 
 OBJS = $(SRCS:.c=.o)
 
 
@@ -75,7 +83,7 @@ clean:
 	ls
 
 # Flash the STM32F1
-upload: proj
+flash: proj
 	make
 	$(STLINK)/st-flash write $(PROJ_NAME).bin 0x8000000
 	make clean
