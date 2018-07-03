@@ -15,7 +15,7 @@ int main(void)
   while(1)
   {
     GPIOC->ODR ^= 0x2000;
-    delay_ms(200);
+    delay_ms(1000);
   }
   return 0;
 }
