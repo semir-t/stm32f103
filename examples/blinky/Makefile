@@ -7,10 +7,17 @@ PROJ_NAME=main
 # Put your STM32F4 library code directory here
 STM_COMMON = /home/semir/.stm/Libraries/STM32F1
 
-# Put your source files here (or *.c, etc)
+# Put your local source files here (or *.c, etc)
 SRCS = main.c 
 SRCS += system_stm32f1xx.c 
-SRCS += delay.c
+SRCS +=
+
+# Here you can link to one more directory (and multiple .c files)
+EXTRA_SOURCE_DIR = ../../lib/
+EXTRA_SOURCE_FILES = delay.c
+EXTRA_SOURCE = $(addprefix $(EXTRA_SOURCE_DIR), $(EXTRA_SOURCE_FILES))
+SRCS += $(EXTRA_SOURCE) 
+
 
 MCPU = cortex-m3
 STARTUP = startup_stm32f103xb.s
@@ -33,7 +40,7 @@ CFLAGS += -mlittle-endian -mthumb -mcpu=$(MCPU) -mthumb-interwork
 # important flag is -fsingle-precision-constant which prevents the double precision emulation
 # CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant
 # CFLAGS += -mfloat-abi=hard 
-CFLAGS += -I.
+CFLAGS += -I. -I$(EXTRA_SOURCE_DIR)
 
 # Include files from STM libraries
 #CFLAGS += -I$(STM_COMMON)/Utilities/STM32F4-Discovery
