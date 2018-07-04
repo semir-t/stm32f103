@@ -29,6 +29,7 @@ memory.
 
 
 ##NOTE:
+  Next step is to implement transfer of the data to the display via DMA.
 
 ## Release History
   * 1.1
