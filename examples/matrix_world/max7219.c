@@ -117,7 +117,7 @@ void max7219_init(uint8_t prescaler)/*{{{*/
   //Harwdare SPI intialize
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   #if SPI
-  spi1_master_init(prescaler,SPI_MODE_0);
+  max7219_spi_init(prescaler);
   #else
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //Software SPI intialize
@@ -156,8 +156,8 @@ void max7219_tx_byte(uint8_t address,uint8_t data)/*{{{*/
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //Hardware SPI
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  spi_tx_byte(SPI1,address);
-  spi_tx_byte(SPI1,data);
+  max7219_tx(address);
+  max7219_tx(data);
   #else
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   //Software SPI
@@ -183,9 +183,9 @@ void max7219_tx_char(uint8_t character, uint8_t font_size)/*{{{*/
 }/*}}}*/
 void max7219_tx_data(uint8_t address, uint8_t data)/*{{{*/
 {
-  SPI1_SS_LOW;
+  MAX7219_SS_LOW;
   max7219_tx_byte(address,data);
-  SPI1_SS_HIGH;
+  MAX7219_SS_HIGH;
 }/*}}}*/
 
 void max7219_display_clean(void)/*{{{*/
@@ -278,7 +278,7 @@ uint8_t max7219_display_scroll(char * string,uint8_t orientation, uint8_t direct
       //would be updated, them second column and ect. That is 
       //why we increment current data by 8
       current_data_cnt = buffer_rx_cnt + n;
-      SPI1_SS_LOW;
+      MAX7219_SS_LOW;
       for(k = 0; k < NUMBER_OF_DEVICES; ++k )
       {
         if(current_data_cnt >= BUFFER_SIZE)
@@ -303,7 +303,7 @@ uint8_t max7219_display_scroll(char * string,uint8_t orientation, uint8_t direct
 #endif
         current_data_cnt = current_data_cnt + 8;
       }
-      SPI1_SS_HIGH;
+      MAX7219_SS_HIGH;
     }
     if(direction)
     {
@@ -337,7 +337,7 @@ uint8_t max7219_display_scroll(char * string,uint8_t orientation, uint8_t direct
     for(n = 0; n < 8; ++n)
     {
       current_data_cnt = buffer_rx_cnt + n;
-      SPI1_SS_LOW;
+      MAX7219_SS_LOW;
       for(k = 0; k < NUMBER_OF_DEVICES; ++k )
       {
         if(current_data_cnt >= BUFFER_SIZE)
@@ -362,7 +362,7 @@ uint8_t max7219_display_scroll(char * string,uint8_t orientation, uint8_t direct
 #endif
         current_data_cnt = current_data_cnt + 8;
       }
-      SPI1_SS_HIGH;
+      MAX7219_SS_HIGH;
     }
     if(direction)
     {
@@ -402,7 +402,7 @@ void max7219_display_char(uint8_t device_no,uint8_t data,uint8_t orientation)/*{
   }
   for(n = 0 ; n < MATRIX_COLS; ++n)
   {
-    SPI1_SS_LOW;
+    MAX7219_SS_LOW;
     for(k = 0, j = n; k < NUMBER_OF_DEVICES; ++k )
     {
 #if SPI
@@ -413,7 +413,7 @@ void max7219_display_char(uint8_t device_no,uint8_t data,uint8_t orientation)/*{
 #endif
       j += 8;
     }
-    SPI1_SS_HIGH;
+    MAX7219_SS_HIGH;
   }
 }/*}}}*/
 

@@ -23,6 +23,15 @@
 #endif
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//SPI core
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#define MAX7219_SS_LOW                SPI1_SS_LOW
+#define MAX7219_SS_HIGH               SPI1_SS_HIGH
+#define max7219_tx(data)              spi_tx_byte(SPI1,data)
+#define max7219_spi_init(prescaler)   spi1_master_init(prescaler,SPI_MODE_0)
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //Matrix configuration
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #define NUMBER_OF_DEVICES       3
@@ -140,6 +149,7 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #define SCROLL_RIGHT                    0x00
 #define SCROLL_LEFT                     0x01
+
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //USER DEFINED FUNCTIONS
