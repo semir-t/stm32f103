@@ -1,6 +1,8 @@
 Ignore files
-*
+/*
+/*/
 
+!/.gitignore
 Except this one
 !board_pinout.gif
 !stm32f1xx_clock_configuration.png
