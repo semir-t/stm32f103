@@ -16,6 +16,11 @@
 #define sim800_usart_rx_byte()                    usart_rx_byte(USART3)
 /*}}}*/
 
+/*{{{ SIM800 CALL*/
+#define SIM800_CALL               0x01
+#define SIM800_CALL_HANGUP        0x00
+/*}}}*/
+
 /*! \brief Initialize SIM800 GSM module 
  *
  * \return No return value
@@ -38,4 +43,6 @@ uint8_t sim800_at(char * command);
 ent* \return Return received string 
  */
 char * sim800_at_rx_data();
+
+uint8_t sim800_sms(char * number, char * message);
 #endif /* ifndef __SIM800_H */

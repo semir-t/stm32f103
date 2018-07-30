@@ -7,6 +7,8 @@ Command commands[NUMBER_OF_COMMANDS] =
 {{"help",help, cli_help},
  {"at",help_at,cli_at},
  {"ussd",help_ussd,cli_ussd},
+ {"sms",help_sms,cli_sms},
+ {"sms",help_call,cli_call},
   /* {"adc1",help_adc1,cli_adc1}, */
   /* {"fir",help_fir,cli_fir}, */
   /* {"stat", help_stat,cli_stat} */
@@ -105,6 +107,7 @@ void find_command(char * cmd,int8_t * cmd_number, uint8_t * argc, char * argv[MA
 /*}}}*/
 
 /*{{{ Custom commands*/
+/*{{{ HELP*/
 uint8_t cli_help(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
   uint8_t k = 0;
@@ -123,7 +126,35 @@ void help()/*{{{*/
   print("-----------------------------------------------------------\n\n");
   print(RESET);
 }/*}}}*/
+/*}}}*/
+/*{{{ AT*/
+uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
+{
+  uint8_t error = 0;
+  if(argc ==  AT_ARGC)
+  {
+    if(sim800_at(argv[AT_CMD]))
+    {
+      print(">"RED" AT COMMAND NOT SUCCESSFUL\n");
+    }
+    else
+    {
+      print(">"DIM BLUE" AT COMMAND SUCCESSFUL\n");
+    }
+    print(RESET);
+  }
+  else
+  {
+    SET_ARGC_ERROR(error);
+  }
+  return error;
+}/*}}}*/
+void help_at(void)/*{{{*/
+{
 
+}/*}}}*/
+/*}}}*/
+/*{{{ USSD*/
 uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
   uint8_t error = 0;
@@ -152,32 +183,63 @@ void help_ussd()/*{{{*/
   print("-----------------------------------------------------------\n\n");
   print(RESET);
 }/*}}}*/
-
-uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
+/*}}}*/
+/*{{{ SMS*/
+uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
   uint8_t error = 0;
-  if(argc ==  AT_ARGC)
+  if(argc ==  SMS_ARGC)
   {
-    if(sim800_at(argv[AT_CMD]))
-    {
-      print(">"RED" AT COMMAND NOT SUCCESSFUL\n");
-    }
-    else
-    {
-      print(">"DIM BLUE" AT COMMAND SUCCESSFUL\n");
-    }
-    print(RESET);
+    sim800_sms(argv[SMS_NUMBER],argv[SMS_MESSAGE]);
   }
   else
   {
     SET_ARGC_ERROR(error);
   }
   return error;
-}/*}}}*/
-void help_at(void)/*{{{*/
-{
 
+  return 0;
 }/*}}}*/
+void help_sms()/*{{{*/
+{
+  print("\n" RESET DIM BLUE CLEAN_DISPLAY);
+  print("-----------------------------------------------------------\n");
+  print("|                   COMMAND LINE INTERFACE                |\n");
+  print("|                     FOR SIM800 v1.0                     |\n");
+  print("-----------------------------------------------------------\n\n");
+  print(RESET);
+}/*}}}*/
+/*}}}*/
+/*{{{ USSD*/
+uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
+{
+  uint8_t error = 0;
+  if(argc ==  CALL_ARGC)
+  {
+    sim800_at("AT+CSCS=\"GSM\"");
+    char * command = prints("AT+CUSD=1,\"%s\",15",argv[USSD_NUMBER]);
+    sim800_at(command);
+    print(DIM BLUE"Wait for USSD response: \n" RESET);
+    print("%s",sim800_at_rx_data());
+  }
+  else
+  {
+    SET_ARGC_ERROR(error);
+  }
+  return error;
+
+  return 0;
+}/*}}}*/
+void help_call()/*{{{*/
+{
+  print("\n" RESET DIM BLUE CLEAN_DISPLAY);
+  print("-----------------------------------------------------------\n");
+  print("|                   COMMAND LINE INTERFACE                |\n");
+  print("|                     FOR SIM800 v1.0                     |\n");
+  print("-----------------------------------------------------------\n\n");
+  print(RESET);
+}/*}}}*/
+/*}}}*/
 /*}}}*/
 
 //---------------------------------------------------------------
@@ -209,25 +271,7 @@ void help_at(void)/*{{{*/
 //Send SMS
 //---------------------------------------------------------------
 //{
-//Checking registration status...
-//AT+CREG?
-//+CREG: 0,1
-//OK
-//The device is registered in home network.
-//Checking SMS Mode...
-//AT+CMGF?
-//+CMGF: 0
-//OK
-//SMS message for is configured for PDU mode
-//Checking SMS Mode...
-//Setting Character Set to GSM
-//AT+CSCS="GSM"
-//OK
-//SMS Service center entry is empty.Not including this field in the PDU
-//AT+CMGS=24
-//+CMGS: 4
-//OK
-//}
+
 //---------------------------------------------------------------
 //USSD
 //---------------------------------------------------------------

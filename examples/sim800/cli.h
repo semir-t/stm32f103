@@ -7,12 +7,14 @@
 #include "color.h"
 
 /*{{{ COMMANDS CONFIG*/
-#define NUMBER_OF_COMMANDS            3 
+#define NUMBER_OF_COMMANDS            5 
 #define MAX_ARGS                      10
 
 #define CMD_HELP                      0
 #define CMD_AT                        1 
 #define CMD_USSD                      2
+#define CMD_SMS                       3
+#define CMD_CALL                      4
 
 #define CMD_NAME                      0
 #define CMD_ARG                       1
@@ -25,6 +27,15 @@
 /*{{{ USSD*/
 #define USSD_ARGC                     2
 #define USSD_NUMBER                   1
+/*}}}*/
+/*{{{ SMS*/
+#define SMS_ARGC                      3
+#define SMS_NUMBER                    1
+#define SMS_MESSAGE                   2
+/*}}}*/
+/*{{{*/
+#define CALL_ARGC                     3
+#define CALL_NUMBER                   1
 /*}}}*/
 /*}}}*/
 /*{{{ ERROR CONFIG*/
@@ -79,6 +90,18 @@ void help_at();
  */
 void help_ussd();
 
+/*! \brief Help function for sms command 
+ *
+ * \return No return value
+ */
+void help_sms();
+
+/*! \brief Help function for call command 
+ *
+ * \return No return value
+ */
+void help_call();
+
 /*! \brief Execution function for help command 
  *
  * \param argc Number of argumets
@@ -106,6 +129,23 @@ uint8_t cli_at(uint8_t argc, char * argv[], void * generic_ptr);
  */
 uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr);
 
+/*! \brief Execution function for sms command 
+ *
+ * \param argc Number of argumets
+ * \param argv Arguments value  
+ * \param generic_ptr Used to transfer custom data not found in command call to a function 
+ * \return Error status 
+ */
+uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr);
+
+/*! \brief Execution function for call command 
+ *
+ * \param argc Number of argumets
+ * \param argv Arguments value  
+ * \param generic_ptr Used to transfer custom data not found in command call to a function 
+ * \return Error status 
+ */
+uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr);
 
 #endif /* ifndef  */
 
