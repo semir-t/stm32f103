@@ -39,10 +39,6 @@
  *  \brief User defined commands for Command line interface 
  *
  */
-typedef struct _cli_t {
-  m_Data 
-} cli_t;
-
 typedef struct // struct Command
 {
   char * _name; /*!< Name of the command */

@@ -1,1 +1,7 @@
-*.txt
+#Ignore all
+*
+
+#Except
+!*.c
+!*.h
+
