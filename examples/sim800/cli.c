@@ -151,7 +151,12 @@ uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
 }/*}}}*/
 void help_at(void)/*{{{*/
 {
-
+  print(BLUE"\t->"RED" at cmd " BLUE "- Send AT command to GSM \n");
+  print(RED "\t\tcmd" BLUE " - AT command to send \n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" at AT\n");
+  print(BLUE"\t\t>"RED" at AT+CSQ\n");
+  print("\n");
 }/*}}}*/
 /*}}}*/
 /*{{{ USSD*/
@@ -176,12 +181,11 @@ uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 }/*}}}*/
 void help_ussd()/*{{{*/
 {
-  print("\n" RESET DIM BLUE CLEAN_DISPLAY);
-  print("-----------------------------------------------------------\n");
-  print("|                   COMMAND LINE INTERFACE                |\n");
-  print("|                     FOR SIM800 v1.0                     |\n");
-  print("-----------------------------------------------------------\n\n");
-  print(RESET);
+  print(BLUE"\t->"RED" ussd code " BLUE "- USSD command  \n");
+  print(RED "\t\tcode" BLUE " - USSD code to send \n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" ussd *100#\n");
+  print("\n");
 }/*}}}*/
 /*}}}*/
 /*{{{ SMS*/
@@ -202,12 +206,12 @@ uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 }/*}}}*/
 void help_sms()/*{{{*/
 {
-  print("\n" RESET DIM BLUE CLEAN_DISPLAY);
-  print("-----------------------------------------------------------\n");
-  print("|                   COMMAND LINE INTERFACE                |\n");
-  print("|                     FOR SIM800 v1.0                     |\n");
-  print("-----------------------------------------------------------\n\n");
-  print(RESET);
+  print(BLUE"\t->"RED" sms number message " BLUE "- Send sms to desired number \n");
+  print(RED "\t\tnumber" BLUE " - Define number which will receive message \n");
+  print(RED "\t\tmessage" BLUE " - Message to send \n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" sms +38761xxxxxx \"Hello there\" \n");
+  print("\n");
 }/*}}}*/
 /*}}}*/
 /*{{{ USSD*/
@@ -233,12 +237,14 @@ uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 }/*}}}*/
 void help_call()/*{{{*/
 {
-  print("\n" RESET DIM BLUE CLEAN_DISPLAY);
-  print("-----------------------------------------------------------\n");
-  print("|                   COMMAND LINE INTERFACE                |\n");
-  print("|                     FOR SIM800 v1.0                     |\n");
-  print("-----------------------------------------------------------\n\n");
-  print(RESET);
+  print(BLUE"\t->"RED" call num/end " BLUE "- Call desired number \n");
+  print(RED "\t\tnum/end" BLUE " - Number to be called. If we want to\n");
+  print("\t\t\tterminate previous call we should set\n");
+  print("\t\t\tthis argument to 'end'\n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" call +38761xxxxxx \n");
+  print(BLUE"\t\t>"RED" call end \n");
+  print("\n");
 }/*}}}*/
 /*}}}*/
 /*}}}*/

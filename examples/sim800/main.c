@@ -35,7 +35,7 @@ int main(void)
     if(command)
     {
       find_command(command,& cmd_number,& argc, argv);
-      if( cmd_number < NUMBER_OF_COMMANDS  && cmd_number > 0)
+      if( cmd_number < NUMBER_OF_COMMANDS  && cmd_number >= 0)
       {
           error = commands[cmd_number]._execute_command(argc,argv,0); 
       }
