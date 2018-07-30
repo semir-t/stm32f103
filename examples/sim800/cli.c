@@ -1,5 +1,7 @@
 #include "cli.h"
 #include "delay.h"
+#include "sim800.h"
+#include "cstring.h"
 
 Command commands[NUMBER_OF_COMMANDS] =
 {{"help",help, cli_help},
@@ -10,10 +12,7 @@ Command commands[NUMBER_OF_COMMANDS] =
   /* {"stat", help_stat,cli_stat} */
 };
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//Private functions
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/*{{{ Private*/
 static int8_t string_compare(char * lhs, char* rhs)/*{{{*/
 {
   while(*lhs && (*lhs == *rhs))
@@ -23,52 +22,10 @@ static int8_t string_compare(char * lhs, char* rhs)/*{{{*/
   }
   return *lhs < *rhs ? -1 : *lhs > *rhs;
 }/*}}}*/
-static uint32_t str_to_int(uint8_t * str)/*{{{*/ //only positive numbers
-{
-  uint8_t k = 0;
-  uint32_t number = 0;
-  for(k = 0; str[k] !='\0'; ++k)
-  {
-    number = number  * 10 + (str[k] - '0');
-  }
-  return number; 
-}/*}}}*/
-static float str_to_float(uint8_t * str)/*{{{*/
-{
-  uint8_t k = 0;
-  uint8_t sign = 0;
-  uint16_t fraction_cnt= 0;
-  float decimal = 0;
-  float fraction = 0;
-  float number = 0;
-  sign = str[k] == '-' ? 1 : 0;
-  for(k = sign; str[k] !='.' && str[k] != '\0'; ++k)
-  {
-    decimal = decimal  * 10 + (str[k] - '0');
-  }
-  for(++k,fraction_cnt = 1; str[k] != '\0'; ++k )
-  {
-    if(fraction_cnt > 1000)
-    {
-      break;
-    }
-    fraction = fraction * 10 + (str[k] - '0');
-    fraction_cnt *= 10;
-  }
-  number = decimal + fraction/fraction_cnt;
-  return sign ? number * (-1) : number ; 
-}/*}}}*/
-static float aps_sum(float a1, float a2)/*{{{*/
-{
-  a1 = a1 > 0 ? a1 : (a1 * (-1));
-  a2 = a2 > 0 ? a2 : (a2 * (-1));
-  return a1 + a2;
-}/*}}}*/
+/*}}}*/
 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//Public functions
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void find_command(uint8_t * cmd,int8_t * cmd_number, uint8_t * argc, uint8_t * argv[MAX_ARGS]) /*{{{*/
+/*{{{ Public*/
+void find_command(char * cmd,int8_t * cmd_number, uint8_t * argc, char * argv[MAX_ARGS]) /*{{{*/
 {
   *cmd_number = -1;
   * argc = 0;
@@ -145,12 +102,10 @@ void find_command(uint8_t * cmd,int8_t * cmd_number, uint8_t * argc, uint8_t * a
   print(DIM RED "  ERROR:" BLUE" unknown command\n" RESET);
   return;
 }/*}}}*/
+/*}}}*/
 
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//Custom commands
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-uint8_t cli_help(uint8_t argc, uint8_t * argv[], void * generic_ptr)/*{{{*/
+/*{{{ Custom commands*/
+uint8_t cli_help(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
   uint8_t k = 0;
   for(k = 0; k < NUMBER_OF_COMMANDS; ++k)
@@ -169,8 +124,22 @@ void help()/*{{{*/
   print(RESET);
 }/*}}}*/
 
-uint8_t cli_ussd(uint8_t argc, uint8_t * argv[], void * generic_ptr)/*{{{*/
+uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
+  uint8_t error = 0;
+  if(argc ==  USSD_ARGC)
+  {
+    sim800_at("AT+CSCS=\"GSM\"");
+    char * command = prints("AT+CUSD=1,\"%s\",15",argv[USSD_NUMBER]);
+    sim800_at(command);
+    print(DIM BLUE"Wait for USSD response: \n" RESET);
+    print("%s",sim800_at_rx_data());
+  }
+  else
+  {
+    SET_ARGC_ERROR(error);
+  }
+  return error;
 
   return 0;
 }/*}}}*/
@@ -184,12 +153,12 @@ void help_ussd()/*{{{*/
   print(RESET);
 }/*}}}*/
 
-uint8_t cli_at(uint8_t argc, uint8_t * argv[],void * generic_ptr)/*{{{ */
+uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
 {
   uint8_t error = 0;
   if(argc ==  AT_ARGC)
   {
-    if(sim800_at(argv[AT_CMD],argv[AT_E]))
+    if(sim800_at(argv[AT_CMD]))
     {
       print(">"RED" AT COMMAND NOT SUCCESSFUL\n");
     }
@@ -209,6 +178,7 @@ void help_at(void)/*{{{*/
 {
 
 }/*}}}*/
+/*}}}*/
 
 //---------------------------------------------------------------
 //SIM

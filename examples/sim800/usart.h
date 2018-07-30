@@ -73,7 +73,7 @@ void USART2_IRQHandler(void);
  * This function should be called frequently.
  * \return 0 or entered string
  * */
-uint8_t * usart2_read_rx_buffer(void);
+char * usart2_read_rx_buffer(void);
 
 /*! \brief Send 1 byte of data using USART2 on STM32F1xx
  * 
@@ -99,3 +99,4 @@ uint8_t usart2_rx_byte();
  */
 void usart3_init(uint16_t baudrate);
 #endif /* end of include guard: USART_H_RL1KETST */
+

@@ -6,7 +6,8 @@
 #include "print.h"
 #include "color.h"
 
-#define NUMBER_OF_COMMANDS            2 
+/*{{{ COMMANDS CONFIG*/
+#define NUMBER_OF_COMMANDS            3 
 #define MAX_ARGS                      10
 
 #define CMD_HELP                      0
@@ -16,37 +17,99 @@
 #define CMD_NAME                      0
 #define CMD_ARG                       1
 
-
-#define AT_ARGC                       3
+/*{{{ AT*/
+#define AT_ARGC                       2
 #define AT_CMD                        1
 #define AT_E                          2
-
+/*}}}*/
+/*{{{ USSD*/
+#define USSD_ARGC                     2
+#define USSD_NUMBER                   1
+/*}}}*/
+/*}}}*/
+/*{{{ ERROR CONFIG*/
 #define ARGC_ERROR                    0x01
 #define ARGV_ERROR                    0x02
 
 #define SET_ARGC_ERROR(err) err|=ARGC_ERROR;
 #define SET_ARGV_ERROR(err) err|=ARGV_ERROR;
+/*}}}*/
 
-static char * cmd_name[NUMBER_OF_COMMANDS] = {"HELP","AT","USSD"};
+/*! \struct Command 
+ *  \brief User defined commands for Command line interface 
+ *
+ */
+typedef struct _cli_t {
+  m_Data 
+} cli_t;
 
 typedef struct // struct Command
 {
-  char * _name;
-  void (*help)(void);
-  uint8_t (*_execute_command)(uint8_t argc, uint8_t *argv[], void * generic_ptr);
+  char * _name; /*!< Name of the command */
+  void (*help)(void); /*!< Display help for the command */
+  uint8_t (*_execute_command)(uint8_t argc, char *argv[], void * generic_ptr);/*!< Execute this function when
+                                                                                command is called */
 } Command;
 
+/*! \brief Check if the inserted command is valid
+ * 
+ *  Check if inserted command is present in base. If command
+ *  is valid, parse the input string and return number of
+ *  arguments (argc), argument values (argv[]) and ordinal
+ *  number of the command(cmd_cnt)
+ *
+ * \param cmd Input string  
+ * \param cmd_cnt Ordinal number of the command 
+ * \param argc Number of arguments 
+ * \return argv Argument values 
+ */
+void find_command(char * cmd,int8_t * cmd_cnt, uint8_t * argc, char * argv[]);
 
-void find_command(uint8_t * cmd,int8_t * cmd_cnt, uint8_t * argc, uint8_t * argv[]);
-
-
-uint8_t cli_help(uint8_t argc, uint8_t * argv[], void * generic_ptr);
-uint8_t cli_at(uint8_t argc, uint8_t * argv[], void * generic_ptr);
-uint8_t cli_ussd(uint8_t argc, uint8_t * argv[], void * generic_ptr);
-
+/*! \brief Help function for Command line interface 
+ *
+ * \return No return value
+ */
 void help();
+
+/*! \brief Help function for at command 
+ *
+ * \return No return value
+ */
 void help_at();
+
+/*! \brief Help function for ussd command 
+ *
+ * \return No return value
+ */
 void help_ussd();
+
+/*! \brief Execution function for help command 
+ *
+ * \param argc Number of argumets
+ * \param argv Arguments value  
+ * \param generic_ptr Used to transfer custom data not found in command call to a function 
+ * \return Error status 
+ */
+uint8_t cli_help(uint8_t argc, char * argv[], void * generic_ptr);
+
+/*! \brief Execution function for at command 
+ *
+ * \param argc Number of argumets
+ * \param argv Arguments value  
+ * \param generic_ptr Used to transfer custom data not found in command call to a function 
+ * \return Error status 
+ */
+uint8_t cli_at(uint8_t argc, char * argv[], void * generic_ptr);
+
+/*! \brief Execution function for ussd command 
+ *
+ * \param argc Number of argumets
+ * \param argv Arguments value  
+ * \param generic_ptr Used to transfer custom data not found in command call to a function 
+ * \return Error status 
+ */
+uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr);
+
 
 #endif /* ifndef  */
 

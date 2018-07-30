@@ -1,13 +1,14 @@
 #include "usart.h"
+#include "print.h"
 
 /* Memory organization BUFFER */
 /* |valid_command|circular buffer| */
 /*   64 Byte       448 Byte */
 
-volatile uint8_t g_usart2_rx_buffer[USART2_BUFFER_SIZE] = {0};
-volatile uint16_t g_usart2_tx_wcnt = MAX_COMMAND_LENGHT + 1;
-volatile uint16_t g_usart2_tx_rcnt = MAX_COMMAND_LENGHT + 1;
-volatile uint16_t g_usart2_tx_cmdcnt = 0; //for creating valid command string & enables backspace
+char g_usart2_rx_buffer[USART2_BUFFER_SIZE] = {0};
+static uint16_t g_usart2_tx_wcnt = MAX_COMMAND_LENGHT + 1;
+static uint16_t g_usart2_tx_rcnt = MAX_COMMAND_LENGHT + 1;
+static uint16_t g_usart2_tx_cmdcnt = 0; //for creating valid command string & enables backspace
 
 /*{{{ Common functions*/
 void usart_tx_byte(USART_TypeDef * USART, uint8_t data)/*{{{*/
@@ -75,7 +76,7 @@ void USART2_IRQHandler(void)/*{{{*/
   ++g_usart2_tx_wcnt;
   g_usart2_tx_wcnt >= USART2_BUFFER_SIZE  && (g_usart2_tx_wcnt = MAX_COMMAND_LENGHT + 1); //reset g_rx_wcnt
 }/*}}}*/
-uint8_t * usart2_read_rx_buffer(void)/*{{{*/
+char * usart2_read_rx_buffer(void)/*{{{*/
 {
   volatile  uint8_t data = 0;
   if((g_usart2_tx_cmdcnt == 0) && (*g_usart2_rx_buffer != '\n'))
