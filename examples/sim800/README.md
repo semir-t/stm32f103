@@ -15,6 +15,7 @@ There is no error protection at this point. User should make sure that every par
 
 This interface is based on sim800 library, and this library has basic functionality which will be gradually upgraded. Next step is connecting to the internet via GSM, and after that code should be reviewed. Main flaws of this library can be seen when receiving response from GSM.
 
+## Commands available
 ### help
 List all available commands and show example of their use.
 ```
