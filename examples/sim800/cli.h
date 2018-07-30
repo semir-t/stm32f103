@@ -34,8 +34,9 @@
 #define SMS_MESSAGE                   2
 /*}}}*/
 /*{{{*/
-#define CALL_ARGC                     3
+#define CALL_ARGC                     2
 #define CALL_NUMBER                   1
+#define CALL_END                      1
 /*}}}*/
 /*}}}*/
 /*{{{ ERROR CONFIG*/

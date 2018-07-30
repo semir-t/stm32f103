@@ -97,7 +97,16 @@ uint8_t sim800_sms(char * number, char * message)/*{{{*/
 }/*}}}*/
 uint8_t sim800_call(char * number, uint8_t action)/*{{{*/
 {
-
+  if(action == SIM800_CALL)
+  {
+    sim800_at("AT+CREG?");
+    char * command = prints("ATD%s;",number);
+    sim800_at(command);
+  }
+  else
+  {
+    sim800_at("ATH");
+  }
 }/*}}}*/
 
 /*}}}*/

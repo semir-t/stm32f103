@@ -8,7 +8,7 @@ Command commands[NUMBER_OF_COMMANDS] =
  {"at",help_at,cli_at},
  {"ussd",help_ussd,cli_ussd},
  {"sms",help_sms,cli_sms},
- {"sms",help_call,cli_call},
+ {"call",help_call,cli_call},
   /* {"adc1",help_adc1,cli_adc1}, */
   /* {"fir",help_fir,cli_fir}, */
   /* {"stat", help_stat,cli_stat} */
@@ -216,19 +216,20 @@ uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   uint8_t error = 0;
   if(argc ==  CALL_ARGC)
   {
-    sim800_at("AT+CSCS=\"GSM\"");
-    char * command = prints("AT+CUSD=1,\"%s\",15",argv[USSD_NUMBER]);
-    sim800_at(command);
-    print(DIM BLUE"Wait for USSD response: \n" RESET);
-    print("%s",sim800_at_rx_data());
+    if(string_cmp(argv[CALL_END],"end") == 0)
+    {
+      sim800_call(0,SIM800_CALL_END);
+    }
+    else
+    {
+      sim800_call(argv[CALL_NUMBER],SIM800_CALL);
+    }
   }
   else
   {
     SET_ARGC_ERROR(error);
   }
   return error;
-
-  return 0;
 }/*}}}*/
 void help_call()/*{{{*/
 {
@@ -242,44 +243,4 @@ void help_call()/*{{{*/
 /*}}}*/
 /*}}}*/
 
-//---------------------------------------------------------------
-//SIM
-//---------------------------------------------------------------
-//AT+CPIN?
-//+CPIN: READY
-//OK
-//SIM is ready
-//---------------------------------------------------------------
-////Voice call
-//---------------------------------------------------------------
-//{
-//Checking registration status...
-//AT+CREG?
-//+CREG: 0,1
-//OK
-//The device is registered in home network.
-//Dialing number +38761053182
-//ATD+38761053182;
-//OK
-//Voice call successfull
-//Hanging up the call..
-//ATH
-//OK
-//Call sucessfully dis-connected..
-//}
-//---------------------------------------------------------------
-//Send SMS
-//---------------------------------------------------------------
-//{
 
-//---------------------------------------------------------------
-//USSD
-//---------------------------------------------------------------
-//{
-//Set device character set to GSM
-//AT+CSCS="GSM"
-//OK
-//AT+CUSD=1,"*100#",15
-//OK
-//+CUSD: 0, "Vas kredit iznosi 5.30 KM i krajnji datum vazenja Vaseg Ultra kredita je 25.08.2018.", 15
-//}

@@ -18,7 +18,7 @@
 
 /*{{{ SIM800 CALL*/
 #define SIM800_CALL               0x01
-#define SIM800_CALL_HANGUP        0x00
+#define SIM800_CALL_END        0x00
 /*}}}*/
 
 /*! \brief Initialize SIM800 GSM module 
