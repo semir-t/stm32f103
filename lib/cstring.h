@@ -8,7 +8,7 @@
 
 #include "stm32f1xx.h"
 
-/*! \brief Save formated string to buffer
+/*! \brief Save formatted string to buffer
  *
  * \param str String to save to buffer 
  * \param ... Variable number of parameters
