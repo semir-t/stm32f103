@@ -193,3 +193,7 @@ void sprint(uint8_t * str)/*{{{*/
     }
   }
 }/*}}}*/
+void (*print_get_tx_function())(uint8_t)/*{{{*/
+{
+  return send_char;
+}/*}}}*/

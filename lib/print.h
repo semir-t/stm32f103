@@ -41,7 +41,7 @@ uint8_t number_width(char ** str);
  */
 void print_number(int num,uint8_t base,uint8_t width);
 
-/*! \brief Print formated string 
+/*! \brief Print formatted string 
  *
  * \param str String to print
  * \param ... Variable number of parameters
@@ -55,5 +55,16 @@ void print(char * str, ...);
  * \return No return value
  */
 void sprint(uint8_t * str);
+
+/*! \brief Return core function used for print() 
+ *
+ * print() function could be used for writing data
+ * to string or some others drives. For this reason
+ * we must have function which will return current
+ * core function, so that we can return print() 
+ * function to her previous/default state.
+ *
+ * \return Pointer to the core tx function */
+void (*print_get_tx_function())(uint8_t);
 
 #endif /* ifndef _PRINT_H */
