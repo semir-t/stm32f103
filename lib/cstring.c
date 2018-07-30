@@ -2,8 +2,8 @@
 #include "print.h"
 
 #define STRING_SIZE                     256
-volatile char g_string[STRING_SIZE];
-volatile uint8_t g_cnt;
+char g_string[STRING_SIZE];
+static uint8_t g_cnt;
 
 /*{{{ Private*/
 static void string_tx_byte(uint8_t data)/*{{{*/
@@ -39,11 +39,11 @@ char * prints(char * str, ...)/*{{{*/
         status = 0x01;
         break; 
       }
-      send_char(ch);
-      /* if(ch == '\n') */
-      /* { */
-      /* send_char('\r'); */
-      /* } */
+      string_tx_byte(ch);
+      if(ch == '\n')
+      {
+        string_tx_byte('\r');
+      }
     }
     if(status)
     {
@@ -55,7 +55,7 @@ char * prints(char * str, ...)/*{{{*/
       case 'c':
         {
           char tx_char = va_arg(vl,int);
-          send_char(tx_char);
+          string_tx_byte(tx_char);
           break;
         }
       case 's':
@@ -67,7 +67,7 @@ char * prints(char * str, ...)/*{{{*/
         number = va_arg(vl,int);
         if(number < 0)
         {
-          send_char('-');
+          string_tx_byte('-');
           number *= (-1);
         }
         print_number(number,base,width);
@@ -76,16 +76,16 @@ char * prints(char * str, ...)/*{{{*/
         base = 2;
         width = number_width(&str);
         number = va_arg(vl,int);
-        send_char('0');
-        send_char('b');
+        string_tx_byte('0');
+        string_tx_byte('b');
         print_number(number,base,width);
         break;
       case 'x':
         base = 16;
         width = number_width(&str);
         number = va_arg(vl,int);
-        send_char('0');
-        send_char('x');
+        string_tx_byte('0');
+        string_tx_byte('x');
         print_number(number,base,width);
         break;
       case 'f':
@@ -97,23 +97,34 @@ char * prints(char * str, ...)/*{{{*/
           int32_t fractional = (re_num - number)*1000; 
           if(re_num< 0)
           {
-            send_char('-');
+            string_tx_byte('-');
             number *= (-1);
             fractional *= (-1);
           }
           print_number(number,base,width);
-          send_char('.');
+          string_tx_byte('.');
           print_number(fractional,base,3);
         }
         break;
       default:
-        send_char(ch);
+        string_tx_byte(ch);
         break;
     }
   }
+  g_cnt = g_cnt == STRING_SIZE ? (STRING_SIZE - 1) : g_cnt;
   g_string[g_cnt] = '\0';
   va_end(vl);
   print_init(send_char);
   return g_string;
+}/*}}}*/
+int8_t string_cmp(char * lhs, char * rhs)/*{{{*/
+{
+  while((*lhs != '\0') && (*lhs == *rhs))
+  {
+    ++lhs;
+    ++rhs;
+  }
+  int8_t status = *lhs < *rhs ? -1 : *lhs > *rhs;
+  return status;
 }/*}}}*/
 /*}}}*/
