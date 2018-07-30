@@ -4,4 +4,5 @@
 #Except
 !*.c
 !*.h
+!README.md
 
