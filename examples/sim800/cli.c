@@ -29,7 +29,7 @@ static int8_t string_compare(char * lhs, char* rhs)/*{{{*/
 /*{{{ Public*/
 void find_command(char * cmd,int8_t * cmd_number, uint8_t * argc, char * argv[MAX_ARGS]) /*{{{*/
 {
-  *cmd_number = -1;
+  * cmd_number = -1;
   * argc = 0;
   uint8_t cmd_cnt = 0;
   if(*cmd != '\0') 
@@ -101,7 +101,7 @@ void find_command(char * cmd,int8_t * cmd_number, uint8_t * argc, char * argv[MA
       return;
     }
   }
-  print(DIM RED "  ERROR:" BLUE" unknown command\n" RESET);
+  /* print(DIM RED "  ERROR:" BLUE" unknown command\n" RESET); */
   return;
 }/*}}}*/
 /*}}}*/

@@ -82,7 +82,8 @@ char * usart2_read_rx_buffer(void)/*{{{*/
   if((g_usart2_tx_cmdcnt == 0) && (*g_usart2_rx_buffer != '\n'))
   {
     *g_usart2_rx_buffer = '\n';
-    print("> ");
+    usart2_tx_byte('>');
+    usart2_tx_byte(' ');
   }
   if(g_usart2_tx_rcnt != g_usart2_tx_wcnt) // chech if new data is available
   {
