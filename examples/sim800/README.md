@@ -4,16 +4,18 @@ Control SIM800 GSM from you terminal.
 
 ## About
 
-This command line interface is basic interface for controlling SIM800 GSM module. There are few commands availabe for GSM control:
+This command line interface is basic interface for controlling SIM800 GSM module. There are few commands available for GSM control:
 * help  - Dispaly help
 * at    - Run arbitrary AT command
 * ussd  - Run USSD code
 * sms   - Send SMS
 * call  - Call arbitrary number
+* http  - HTTP request
 
-There is no error protection at this point. User should make sure that every parameter is correct, otherwise undefined behaviour will occur.
+There is no error protection at this point. If you are lucky, this will work like champ. But if any error occurs, MCU will be blocked and it must be restarded.
 
-This interface is based on sim800 library, and this library has basic functionality which will be gradually upgraded. Next step is connecting to the internet via GSM, and after that code should be reviewed. Main flaws of this library can be seen when receiving response from GSM.
+
+This interface is based on sim800 library, and this library has basic functionality which will be gradually upgraded. Main flaws of this library can be seen when receiving response from GSM.
 
 ## Commands available
 ### help
@@ -80,6 +82,19 @@ call +38761xxxxxx
 call end
 ```
 If phone number is not valid, undefined behaviour will occur.
+
+### http
+Generate HTTP request.
+1. post
+```
+http post url data
+```
+
+2. get
+
+```
+http get url
+```
 
 ## Authors
 
