@@ -7,7 +7,7 @@
 #include "color.h"
 
 /*{{{ COMMANDS CONFIG*/
-#define NUMBER_OF_COMMANDS            5 
+#define NUMBER_OF_COMMANDS            6 
 #define MAX_ARGS                      10
 
 #define CMD_HELP                      0
@@ -15,6 +15,7 @@
 #define CMD_USSD                      2
 #define CMD_SMS                       3
 #define CMD_CALL                      4
+#define CMD_HTTP                      5
 
 #define CMD_NAME                      0
 #define CMD_ARG                       1
@@ -33,10 +34,17 @@
 #define SMS_NUMBER                    1
 #define SMS_MESSAGE                   2
 /*}}}*/
-/*{{{*/
+/*{{{CALL*/
 #define CALL_ARGC                     2
 #define CALL_NUMBER                   1
 #define CALL_END                      1
+/*}}}*/
+/*{{{ HTTP*/
+#define HTTP_ARGC_POST                4 
+#define HTTP_ARGC_GET                 3  
+#define HTTP_REQUEST                  1                 
+#define HTTP_SITE                     2                 
+#define HTTP_DATA                     3                 
 /*}}}*/
 /*}}}*/
 /*{{{ ERROR CONFIG*/
@@ -79,30 +87,6 @@ void find_command(char * cmd,int8_t * cmd_cnt, uint8_t * argc, char * argv[]);
  */
 void help();
 
-/*! \brief Help function for at command 
- *
- * \return No return value
- */
-void help_at();
-
-/*! \brief Help function for ussd command 
- *
- * \return No return value
- */
-void help_ussd();
-
-/*! \brief Help function for sms command 
- *
- * \return No return value
- */
-void help_sms();
-
-/*! \brief Help function for call command 
- *
- * \return No return value
- */
-void help_call();
-
 /*! \brief Execution function for help command 
  *
  * \param argc Number of argumets
@@ -111,6 +95,13 @@ void help_call();
  * \return Error status 
  */
 uint8_t cli_help(uint8_t argc, char * argv[], void * generic_ptr);
+
+
+/*! \brief Help function for at command 
+ *
+ * \return No return value
+ */
+void help_at();
 
 /*! \brief Execution function for at command 
  *
@@ -121,6 +112,12 @@ uint8_t cli_help(uint8_t argc, char * argv[], void * generic_ptr);
  */
 uint8_t cli_at(uint8_t argc, char * argv[], void * generic_ptr);
 
+/*! \brief Help function for ussd command 
+ *
+ * \return No return value
+ */
+void help_ussd();
+
 /*! \brief Execution function for ussd command 
  *
  * \param argc Number of argumets
@@ -129,6 +126,12 @@ uint8_t cli_at(uint8_t argc, char * argv[], void * generic_ptr);
  * \return Error status 
  */
 uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr);
+
+/*! \brief Help function for sms command 
+ *
+ * \return No return value
+ */
+void help_sms();
 
 /*! \brief Execution function for sms command 
  *
@@ -139,6 +142,12 @@ uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr);
  */
 uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr);
 
+/*! \brief Help function for call command 
+ *
+ * \return No return value
+ */
+void help_call();
+
 /*! \brief Execution function for call command 
  *
  * \param argc Number of argumets
@@ -147,6 +156,22 @@ uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr);
  * \return Error status 
  */
 uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr);
+
+/*! \brief Help function for http command 
+ *
+ * \return No return value
+ */
+void help_http();
+
+/*! \brief Execution function for http command 
+ *
+ * \param argc Number of argumets
+ * \param argv Arguments value  
+ * \param generic_ptr Used to transfer custom data not found in command call to a function 
+ * \return Error status 
+ */
+uint8_t cli_http(uint8_t argc, char * argv[], void * generic_ptr);
+
 
 #endif /* ifndef  */
 

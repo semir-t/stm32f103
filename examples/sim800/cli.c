@@ -9,6 +9,7 @@ Command commands[NUMBER_OF_COMMANDS] =
  {"ussd",help_ussd,cli_ussd},
  {"sms",help_sms,cli_sms},
  {"call",help_call,cli_call},
+ {"http",help_http,cli_http},
   /* {"adc1",help_adc1,cli_adc1}, */
   /* {"fir",help_fir,cli_fir}, */
   /* {"stat", help_stat,cli_stat} */
@@ -108,15 +109,6 @@ void find_command(char * cmd,int8_t * cmd_number, uint8_t * argc, char * argv[MA
 
 /*{{{ Custom commands*/
 /*{{{ HELP*/
-uint8_t cli_help(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
-{
-  uint8_t k = 0;
-  for(k = 0; k < NUMBER_OF_COMMANDS; ++k)
-  {
-    commands[k].help();
-  }
-  return 0;
-}/*}}}*/
 void help()/*{{{*/
 {
   print("\n" RESET DIM BLUE CLEAN_DISPLAY);
@@ -126,29 +118,17 @@ void help()/*{{{*/
   print("-----------------------------------------------------------\n\n");
   print(RESET);
 }/*}}}*/
+uint8_t cli_help(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
+{
+  uint8_t k = 0;
+  for(k = 0; k < NUMBER_OF_COMMANDS; ++k)
+  {
+    commands[k].help();
+  }
+  return 0;
+}/*}}}*/
 /*}}}*/
 /*{{{ AT*/
-uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
-{
-  uint8_t error = 0;
-  if(argc ==  AT_ARGC)
-  {
-    if(sim800_at(argv[AT_CMD]))
-    {
-      print(">"RED" AT COMMAND NOT SUCCESSFUL\n");
-    }
-    else
-    {
-      print(">"DIM BLUE" AT COMMAND SUCCESSFUL\n");
-    }
-    print(RESET);
-  }
-  else
-  {
-    SET_ARGC_ERROR(error);
-  }
-  return error;
-}/*}}}*/
 void help_at(void)/*{{{*/
 {
   print(BLUE"\t->"RED" at cmd " BLUE "- Send AT command to GSM \n");
@@ -158,18 +138,42 @@ void help_at(void)/*{{{*/
   print(BLUE"\t\t>"RED" at AT+CSQ\n");
   print("\n");
 }/*}}}*/
+uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
+{
+  uint8_t error = 0;
+  if(argc ==  AT_ARGC)
+  {
+    sim800_at(argv[AT_CMD]);
+    print("%s",sim800_at_rx_data(2));
+  }
+  else
+  {
+    SET_ARGC_ERROR(error);
+  }
+  return error;
+}/*}}}*/
 /*}}}*/
 /*{{{ USSD*/
+void help_ussd()/*{{{*/
+{
+  print(BLUE"\t->"RED" ussd code " BLUE "- USSD command  \n");
+  print(RED "\t\tcode" BLUE " - USSD code to send \n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" ussd *100#\n");
+  print("\n");
+}/*}}}*/
 uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
   uint8_t error = 0;
   if(argc ==  USSD_ARGC)
   {
     sim800_at("AT+CSCS=\"GSM\"");
+    print("%s",sim800_at_rx_data(2));
     char * command = prints("AT+CUSD=1,\"%s\",15",argv[USSD_NUMBER]);
     sim800_at(command);
+    print("%s",sim800_at_rx_data(2));
     print(DIM BLUE"Wait for USSD response: \n" RESET);
-    print("%s",sim800_at_rx_data());
+    print("%s",sim800_at_rx_data(2));
   }
   else
   {
@@ -179,16 +183,17 @@ uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 
   return 0;
 }/*}}}*/
-void help_ussd()/*{{{*/
-{
-  print(BLUE"\t->"RED" ussd code " BLUE "- USSD command  \n");
-  print(RED "\t\tcode" BLUE " - USSD code to send \n");
-  print(BLUE"\t\t#example: \n");
-  print(BLUE"\t\t>"RED" ussd *100#\n");
-  print("\n");
-}/*}}}*/
 /*}}}*/
 /*{{{ SMS*/
+void help_sms()/*{{{*/
+{
+  print(BLUE"\t->"RED" sms number message " BLUE "- Send sms to desired number \n");
+  print(RED "\t\tnumber" BLUE " - Define number which will receive message \n");
+  print(RED "\t\tmessage" BLUE " - Message to send \n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" sms +38761xxxxxx \"Hello there\" \n");
+  print("\n");
+}/*}}}*/
 uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
   uint8_t error = 0;
@@ -204,17 +209,19 @@ uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 
   return 0;
 }/*}}}*/
-void help_sms()/*{{{*/
-{
-  print(BLUE"\t->"RED" sms number message " BLUE "- Send sms to desired number \n");
-  print(RED "\t\tnumber" BLUE " - Define number which will receive message \n");
-  print(RED "\t\tmessage" BLUE " - Message to send \n");
-  print(BLUE"\t\t#example: \n");
-  print(BLUE"\t\t>"RED" sms +38761xxxxxx \"Hello there\" \n");
-  print("\n");
-}/*}}}*/
 /*}}}*/
 /*{{{ USSD*/
+void help_call()/*{{{*/
+{
+  print(BLUE"\t->"RED" call num/end " BLUE "- Call desired number \n");
+  print(RED "\t\tnum/end" BLUE " - Number to be called. If we want to\n");
+  print("\t\t\tterminate previous call we should set\n");
+  print("\t\t\tthis argument to 'end'\n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" call +38761xxxxxx \n");
+  print(BLUE"\t\t>"RED" call end \n");
+  print("\n");
+}/*}}}*/
 uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 {
   uint8_t error = 0;
@@ -235,7 +242,9 @@ uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   }
   return error;
 }/*}}}*/
-void help_call()/*{{{*/
+/*}}}*/
+/*{{{ HTTP*/
+void help_http()/*{{{*/
 {
   print(BLUE"\t->"RED" call num/end " BLUE "- Call desired number \n");
   print(RED "\t\tnum/end" BLUE " - Number to be called. If we want to\n");
@@ -245,6 +254,37 @@ void help_call()/*{{{*/
   print(BLUE"\t\t>"RED" call +38761xxxxxx \n");
   print(BLUE"\t\t>"RED" call end \n");
   print("\n");
+}/*}}}*/
+uint8_t cli_http(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
+{
+  uint8_t error = 0;
+  if ((argc ==  HTTP_ARGC_GET) && (string_cmp(argv[HTTP_REQUEST],"get") == 0))
+  {
+    print("SYS-> GET REQUEST\n");
+    sim800_http(SIM800_HTTP_GET,argv[HTTP_SITE],0);
+    /* if(string_cmp(argv[CALL_END],"end") == 0) */
+    /* { */
+      /* sim800_call(0,SIM800_CALL_END); */
+    /* } */
+    /* else */
+    /* { */
+      /* sim800_call(argv[CALL_NUMBER],SIM800_CALL); */
+    /* } */
+  }
+  else if (argc == HTTP_ARGC_POST && (string_cmp(argv[HTTP_REQUEST],"post") == 0) )
+  {
+    print("SYS-> POST REQUEST\n");
+    sim800_http(SIM800_HTTP_POST,argv[HTTP_SITE],argv[HTTP_DATA]);
+  }
+  else if (argc == HTTP_ARGC_GET || argc == HTTP_ARGC_POST)
+  {
+    SET_ARGV_ERROR(error);
+  }
+  else
+  {
+    SET_ARGC_ERROR(error);
+  }
+  return error;
 }/*}}}*/
 /*}}}*/
 /*}}}*/
