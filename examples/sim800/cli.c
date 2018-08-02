@@ -246,13 +246,16 @@ uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
 /*{{{ HTTP*/
 void help_http()/*{{{*/
 {
-  print(BLUE"\t->"RED" call num/end " BLUE "- Call desired number \n");
-  print(RED "\t\tnum/end" BLUE " - Number to be called. If we want to\n");
-  print("\t\t\tterminate previous call we should set\n");
-  print("\t\t\tthis argument to 'end'\n");
+  print(BLUE"\t->"RED" http post url data " BLUE "- POST data to site \n");
+  print(RED "\t\turl" BLUE " - URL of the site\n");
+  print(RED "\t\tdata" BLUE " - Data to send\n");
   print(BLUE"\t\t#example: \n");
-  print(BLUE"\t\t>"RED" call +38761xxxxxx \n");
-  print(BLUE"\t\t>"RED" call end \n");
+  print(BLUE"\t\t>"RED" http post http://abcd.com/post.php \"Dummy data\" \n");
+  print("\n");
+  print(BLUE"\t->"RED" http get url " BLUE "- GET data from site \n");
+  print(RED "\t\turl" BLUE " - URL of the site\n");
+  print(BLUE"\t\t#example: \n");
+  print(BLUE"\t\t>"RED" http get http://www.google.com \n");
   print("\n");
 }/*}}}*/
 uint8_t cli_http(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
@@ -264,11 +267,11 @@ uint8_t cli_http(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
     sim800_http(SIM800_HTTP_GET,argv[HTTP_SITE],0);
     /* if(string_cmp(argv[CALL_END],"end") == 0) */
     /* { */
-      /* sim800_call(0,SIM800_CALL_END); */
+    /* sim800_call(0,SIM800_CALL_END); */
     /* } */
     /* else */
     /* { */
-      /* sim800_call(argv[CALL_NUMBER],SIM800_CALL); */
+    /* sim800_call(argv[CALL_NUMBER],SIM800_CALL); */
     /* } */
   }
   else if (argc == HTTP_ARGC_POST && (string_cmp(argv[HTTP_REQUEST],"post") == 0) )
