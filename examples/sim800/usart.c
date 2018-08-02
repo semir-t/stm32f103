@@ -28,6 +28,10 @@ uint8_t usart_rx_byte(USART_TypeDef * USART)/*{{{*/
   }
   return USART->DR;
 }/*}}}*/
+uint8_t usart_rx_available(USART_TypeDef * USART)/*{{{*/
+{
+  return (USART->SR & USART_SR_RXNE);
+}/*}}}*/
 /*}}}*/
 /*{{{ USART2*/
 void usart2_init(uint16_t baudrate)/*{{{*/

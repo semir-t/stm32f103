@@ -17,7 +17,7 @@
 #define USART_BAUDRATE_115200                     0x0138
 
 #define USART2_BUFFER_SIZE 512
-#define MAX_COMMAND_LENGHT 64
+#define MAX_COMMAND_LENGHT 128 
 
 /*{{{ Common functions*/
 /*! \brief Send 1 byte of data using USART on STM32F1xx
@@ -34,6 +34,13 @@ void usart_tx_byte(USART_TypeDef * USART,uint8_t data);
  * \return Return data received via USART
  */
 uint8_t usart_rx_byte(USART_TypeDef * USART);
+
+/*! \brief Check if there is data to read 
+ *
+ * \param  USART Select USART peripheral. 
+ * \return Return status 
+ */
+uint8_t usart_rx_available(USART_TypeDef * USART);
 /*}}}*/
 /*{{{ USART2*/
 /*! \brief Initialize USART on STM32F1xx 
