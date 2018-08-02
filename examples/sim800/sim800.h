@@ -18,7 +18,12 @@
 
 /*{{{ SIM800 CALL*/
 #define SIM800_CALL               0x01
-#define SIM800_CALL_END        0x00
+#define SIM800_CALL_END           0x00
+/*}}}*/
+/*{{{ SIM800 HTTP*/
+#define SIM800_HTTP_GET           0x00
+#define SIM800_HTTP_POST          0x01
+#define SIM800_HTTP_HEAD          0x02
 /*}}}*/
 
 /*! \brief Initialize SIM800 GSM module 
@@ -32,7 +37,7 @@ void sim800_init(void);
  * \param  command Command to send to GSM 
  * \return Return value is reserved for future use 
  */
-uint8_t sim800_at(char * command);
+void sim800_at(char * command);
 
 /*! \brief Read GSM respond after AT command 
  *
@@ -42,7 +47,8 @@ uint8_t sim800_at(char * command);
  * characters.
 ent* \return Return received string 
  */
-char * sim800_at_rx_data();
+char * sim800_at_rx_data(uint8_t line_cnt);
 
 uint8_t sim800_sms(char * number, char * message);
 #endif /* ifndef __SIM800_H */
+
