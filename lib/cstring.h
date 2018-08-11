@@ -27,4 +27,6 @@ char * prints(char * str, ...);
  * \return Compare result as described
  * */
 int8_t string_cmp(char * lhs, char * rhs);
+
+uint32_t string_to_number(char * str);
 #endif /* ifndef __CSTRING_H */

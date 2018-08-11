@@ -127,4 +127,14 @@ int8_t string_cmp(char * lhs, char * rhs)/*{{{*/
   int8_t status = *lhs < *rhs ? -1 : *lhs > *rhs;
   return status;
 }/*}}}*/
+uint32_t string_to_number(char * str)
+{
+  uint32_t number = 0;
+  uint8_t k = 0;
+  while ((str[k] != '\0') && (str[k] != '\r') && (str[k] != '\n'))
+  {
+    number = (number * 10) + (str[k++] - '0');
+  }
+  return number;
+}
 /*}}}*/

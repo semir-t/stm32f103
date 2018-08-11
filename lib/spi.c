@@ -20,6 +20,7 @@ void spi1_master_init(uint16_t spi_prescaler,uint8_t spi_mode)/*{{{*/
   //CONFIGURE MISO
   GPIOA->CRL &= ~(0x0f000000);                //reset value to 0;
   GPIOA->CRL |= 0x08000000;                   //set GPIO as IF_PP
+  GPIOA->ODR |= 0x0040;                       //set GPIO as PP
 
   //CONFIGURE SS
   RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;        //enable clock
