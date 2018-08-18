@@ -5,26 +5,28 @@
 
 Command commands[NUMBER_OF_COMMANDS] =
 {{"help",help, cli_help},
- {"at",help_at,cli_at},
- {"ussd",help_ussd,cli_ussd},
- {"sms",help_sms,cli_sms},
- {"call",help_call,cli_call},
- {"http",help_http,cli_http},
+ {"at",help_at,cli_at}
+ /* {"ussd",help_ussd,cli_ussd}, */
+ /* {"sms",help_sms,cli_sms}, */
+ /* {"call",help_call,cli_call}, */
+ /* {"http",help_http,cli_http}, */
   /* {"adc1",help_adc1,cli_adc1}, */
   /* {"fir",help_fir,cli_fir}, */
   /* {"stat", help_stat,cli_stat} */
 };
 
 /*{{{ Private*/
-static int8_t string_compare(char * lhs, char* rhs)/*{{{*/
-{
-  while(*lhs && (*lhs == *rhs))
-  {
-    ++lhs;
-    ++rhs;
-  }
-  return *lhs < *rhs ? -1 : *lhs > *rhs;
-}/*}}}*/
+/* static uint8_t at_wait_for_response(const char * expected) */
+/* { */
+    /* char at_respond[100]; */
+    /* char at_check[50]; */
+    /* string_cpy(at_check,prints("%s\n",expected)); */
+    /* do */
+    /* { */
+    /*   print("%s",sim800_at_respond(at_respond)); */
+    /* } while((string_cmp(at_respond,at_check) != 0) && (at_respond[0] != '\0')); */
+    /* return at_respond[0] == '\0' ? 1 : 0; */
+/* } */
 /*}}}*/
 
 /*{{{ Public*/
@@ -92,7 +94,7 @@ void find_command(char * cmd,int8_t * cmd_number, uint8_t * argc, char * argv[MA
     /* print("-> SYS: command_name_databse: %s \n",commands[cmd_cnt]._name); */
     /* print("-> SYS: compare: %d\n",string_compare(cmd_name,commands[cmd_cnt]._name)); */
     /* #endif */
-    if(string_compare(cmd_name,commands[cmd_cnt]._name))
+    if(string_cmp(cmd_name,commands[cmd_cnt]._name))
     {
       continue;
     }
@@ -144,7 +146,11 @@ uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
   if(argc ==  AT_ARGC)
   {
     sim800_at(argv[AT_CMD]);
-    print("%s",sim800_at_rx_data(2));
+    if (sim800_wait_for_response(argv[AT_RESPONSE]))
+    {
+      print("AT COMMAND TIMEOUT\n");
+    }
+
   }
   else
   {
@@ -167,13 +173,13 @@ uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   uint8_t error = 0;
   if(argc ==  USSD_ARGC)
   {
-    sim800_at("AT+CSCS=\"GSM\"");
-    print("%s",sim800_at_rx_data(2));
-    char * command = prints("AT+CUSD=1,\"%s\",15",argv[USSD_NUMBER]);
-    sim800_at(command);
-    print("%s",sim800_at_rx_data(2));
-    print(DIM BLUE"Wait for USSD response: \n" RESET);
-    print("%s",sim800_at_rx_data(2));
+    /* sim800_at("AT+CSCS=\"GSM\""); */
+    /* print("%s",sim800_at_rx_data(2)); */
+    /* char * command = prints("AT+CUSD=1,\"%s\",15",argv[USSD_NUMBER]); */
+    /* sim800_at(command); */
+    /* print("%s",sim800_at_rx_data(2)); */
+    /* print(DIM BLUE"Wait for USSD response: \n" RESET); */
+    /* print("%s",sim800_at_rx_data(2)); */
   }
   else
   {
@@ -199,7 +205,7 @@ uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   uint8_t error = 0;
   if(argc ==  SMS_ARGC)
   {
-    sim800_sms(argv[SMS_NUMBER],argv[SMS_MESSAGE]);
+    /* sim800_sms(argv[SMS_NUMBER],argv[SMS_MESSAGE]); */
   }
   else
   {
@@ -229,11 +235,11 @@ uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   {
     if(string_cmp(argv[CALL_END],"end") == 0)
     {
-      sim800_call(0,SIM800_CALL_END);
+      /* sim800_call(0,SIM800_CALL_END); */
     }
     else
     {
-      sim800_call(argv[CALL_NUMBER],SIM800_CALL);
+      /* sim800_call(argv[CALL_NUMBER],SIM800_CALL); */
     }
   }
   else
@@ -264,7 +270,7 @@ uint8_t cli_http(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   if ((argc ==  HTTP_ARGC_GET) && (string_cmp(argv[HTTP_REQUEST],"get") == 0))
   {
     print("SYS-> GET REQUEST\n");
-    sim800_http(SIM800_HTTP_GET,argv[HTTP_SITE],0);
+    /* sim800_http(SIM800_HTTP_GET,argv[HTTP_SITE],0); */
     /* if(string_cmp(argv[CALL_END],"end") == 0) */
     /* { */
     /* sim800_call(0,SIM800_CALL_END); */
@@ -277,7 +283,7 @@ uint8_t cli_http(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   else if (argc == HTTP_ARGC_POST && (string_cmp(argv[HTTP_REQUEST],"post") == 0) )
   {
     print("SYS-> POST REQUEST\n");
-    sim800_http(SIM800_HTTP_POST,argv[HTTP_SITE],argv[HTTP_DATA]);
+    /* sim800_http(SIM800_HTTP_POST,argv[HTTP_SITE],argv[HTTP_DATA]); */
   }
   else if (argc == HTTP_ARGC_GET || argc == HTTP_ARGC_POST)
   {

@@ -102,7 +102,7 @@ uint8_t sim800_call(char * number, uint8_t action)/*{{{*/
     print("%s",sim800_at_rx_data(2));
   }
 }/*}}}*/
-uint8_t sim800_http(uint8_t request,char * site,uint8_t * data)
+uint8_t sim800_http(uint8_t request,char * site,uint8_t * data)/*{{{*/
 {
   sim800_at("AT+SAPBR=3,1,\"APN\",\"active.bhmobile.ba\"");
   print("%s",sim800_at_rx_data(2));
@@ -149,6 +149,6 @@ uint8_t sim800_http(uint8_t request,char * site,uint8_t * data)
   }
   sim800_at("AT+HTTPTERM");
   print("%s",sim800_at_rx_data(2));
-}
+}/*}}}*/
 
 /*}}}*/

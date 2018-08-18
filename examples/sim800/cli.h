@@ -21,9 +21,9 @@
 #define CMD_ARG                       1
 
 /*{{{ AT*/
-#define AT_ARGC                       2
+#define AT_ARGC                       3
 #define AT_CMD                        1
-#define AT_E                          2
+#define AT_RESPONSE                   2
 /*}}}*/
 /*{{{ USSD*/
 #define USSD_ARGC                     2

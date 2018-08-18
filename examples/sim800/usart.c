@@ -127,7 +127,6 @@ char * usart2_read_rx_buffer(void)/*{{{*/
 }/*}}}*/
 /*}}}*/
 /*{{{USART3*/
-
 void usart3_init(uint16_t baudrate)/*{{{*/
 {
   //enable clock for USART
@@ -148,6 +147,19 @@ void usart3_init(uint16_t baudrate)/*{{{*/
   //  - no polarity bit
   USART3->BRR = baudrate;
   USART3->CR1 |= USART_CR1_RE | USART_CR1_TE | USART_CR1_UE;
+}/*}}}*/
+void usart3_irq_enable(void)/*{{{*/
+{
+  USART3->CR1 &= ~(USART_CR1_UE);
+  NVIC_EnableIRQ(USART3_IRQn);
+  USART3->CR1 |= (USART_CR1_UE) | (USART_CR1_RXNEIE);
+}/*}}}*/
+void usart3_irq_disable(void)/*{{{*/
+{
+  USART3->CR1 &= ~( (USART_CR1_UE) | (USART_CR1_RXNEIE)  );
+  NVIC_DisableIRQ(USART3_IRQn);
+  USART3->CR1 |= (USART_CR1_UE);
+
 }/*}}}*/
 /*}}}*/
 

@@ -105,5 +105,27 @@ uint8_t usart2_rx_byte();
  * \return No return value
  */
 void usart3_init(uint16_t baudrate);
+
+/*! \brief Enable IRQ for USART3 
+ *
+ *  Generate IRQ for RXNE (RX not empty).
+ * \return No return value
+ */
+void usart3_irq_enable(void);
+
+/*! \brief Disable IRQ for USART3 
+ *
+ *  Don't generate IRQ for RXNE (RX not empty).
+ * \return No return value
+ */
+void usart3_irq_disable(void);
+
+/*! \brief USART3 IRQ handler function 
+ *
+ * Function called when USART3 generates IRQ request.
+ * \return No return value
+ */
+void USART3_IRQHandler(void);
+
 #endif /* end of include guard: USART_H_RL1KETST */
 

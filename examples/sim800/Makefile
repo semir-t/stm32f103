@@ -10,7 +10,7 @@ STM_COMMON = /home/semir/.stm/Libraries/STM32F1
 # Put your local source files here (or *.c, etc)
 SRCS = main.c 
 # SRCS += system_stm32f1xx.c 
-SRCS += usart.c cli.c sim800.c 
+SRCS += usart.c cli.c gsm.c 
 
 # Here you can link to one more directory (and multiple .c files)
 EXTRA_SOURCE_DIR = ../../lib/
