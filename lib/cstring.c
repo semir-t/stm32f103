@@ -39,11 +39,11 @@ char * prints(char * str, ...)/*{{{*/
         status = 0x01;
         break; 
       }
-      string_tx_byte(ch);
       if(ch == '\n')
       {
         string_tx_byte('\r');
       }
+      string_tx_byte(ch);
     }
     if(status)
     {
@@ -117,7 +117,7 @@ char * prints(char * str, ...)/*{{{*/
   print_init(send_char);
   return g_string;
 }/*}}}*/
-int8_t string_cmp(char * lhs, char * rhs)/*{{{*/
+int8_t string_cmp(const char * lhs, const char * rhs)/*{{{*/
 {
   while((*lhs != '\0') && (*lhs == *rhs))
   {
@@ -127,7 +127,19 @@ int8_t string_cmp(char * lhs, char * rhs)/*{{{*/
   int8_t status = *lhs < *rhs ? -1 : *lhs > *rhs;
   return status;
 }/*}}}*/
-uint32_t string_to_number(char * str)
+char * string_cpy(char * lhs, const char * rhs)/*{{{*/
+{
+  uint8_t k = 0;
+  while (rhs[k] != '\0')
+  {
+    lhs[k] = rhs[k];
+    ++k;
+  }
+  lhs[k] = '\0';
+  return lhs;
+}/*}}}*/
+
+uint32_t string_to_number(char * str)/*{{{*/
 {
   uint32_t number = 0;
   uint8_t k = 0;
@@ -136,5 +148,5 @@ uint32_t string_to_number(char * str)
     number = (number * 10) + (str[k++] - '0');
   }
   return number;
-}
+}/*}}}*/
 /*}}}*/
