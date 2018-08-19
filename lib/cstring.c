@@ -1,21 +1,18 @@
 #include "cstring.h"
 #include "print.h"
 
-#define STRING_SIZE                     256
-char g_string[STRING_SIZE];
-static uint8_t g_cnt;
+#define MAX_ARGS                        50 
+static char * g_destination;
+static uint16_t g_cnt;
 
 /*{{{ Private*/
 static void string_tx_byte(uint8_t data)/*{{{*/
 {
-  if(g_cnt < STRING_SIZE)
-  {
-    g_string[g_cnt++] = data;
-  }
+  g_destination[g_cnt++] = data;
 }/*}}}*/
 /*}}}*/
 /*{{{ Public*/
-char * prints(char * str, ...)/*{{{*/
+char * prints(char * destination,char * str, ...)/*{{{*/
 {
   char ch;
   uint8_t base = 0;
@@ -25,6 +22,7 @@ char * prints(char * str, ...)/*{{{*/
 
   void (*send_char)(uint8_t) = print_get_tx_function();
   print_init(string_tx_byte);
+  g_destination = destination;
   g_cnt = 0;
 
   va_list vl;
@@ -39,10 +37,10 @@ char * prints(char * str, ...)/*{{{*/
         status = 0x01;
         break; 
       }
-      if(ch == '\n')
-      {
-        string_tx_byte('\r');
-      }
+      /* if(ch == '\n') */
+      /* { */
+        /* string_tx_byte('\r'); */
+      /* } */
       string_tx_byte(ch);
     }
     if(status)
@@ -111,11 +109,10 @@ char * prints(char * str, ...)/*{{{*/
         break;
     }
   }
-  g_cnt = g_cnt == STRING_SIZE ? (STRING_SIZE - 1) : g_cnt;
-  g_string[g_cnt] = '\0';
+  g_destination[g_cnt] = '\0';
   va_end(vl);
   print_init(send_char);
-  return g_string;
+  return g_destination;
 }/*}}}*/
 int8_t string_cmp(const char * lhs, const char * rhs)/*{{{*/
 {
@@ -137,6 +134,45 @@ char * string_cpy(char * lhs, const char * rhs)/*{{{*/
   }
   lhs[k] = '\0';
   return lhs;
+}/*}}}*/
+uint8_t string_split(char * line, uint8_t * argc, char * argv[],char * delimiter)/*{{{*/
+{
+  uint8_t k = 0;
+  *argc = 0;
+  if(*line != '\0')
+  {
+    argv[(*argc)++] = line;
+  }
+  while(*line != '\0')
+  {
+    if(*argc >= MAX_ARGS)
+    {
+      return 0x01;
+    }
+    k = 0;
+    while(delimiter[k] != '\0')
+    {
+      if(*line == delimiter[k])
+      {
+        *line = ' ';
+      }
+      k++;
+    }
+    if (*line == ' ')
+    {
+      while(*line == ' ')
+      {
+        *line++ = '\0';
+      }
+      if(*line != '\0')
+      {
+        argv[(*argc)++] = line;
+      }
+      continue;
+    }
+    ++line;
+  }
+  return 0;
 }/*}}}*/
 
 uint32_t string_to_number(char * str)/*{{{*/

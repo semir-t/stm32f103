@@ -8,13 +8,14 @@
 
 #include "stm32f1xx.h"
 
-/*! \brief Save formatted string to buffer
+/*! \brief Save formatted string to destination string 
  *
- * \param str String to save to buffer 
+ * \param destination Destination string 
+ * \param str String to save to destination string 
  * \param ... Variable number of parameters
  * \return Return formated string 
  */
-char * prints(char * str, ...);
+char * prints(char * destination,char * str, ...);
 
 /*! \brief Compare two strings 
  *
@@ -36,6 +37,17 @@ int8_t string_cmp(const char * lhs, const char * rhs);
  * \return Pointer to destination string 
  * */
 char * string_cpy(char * lhs, const char * rhs);
+
+/*! \brief Split string to substrings  
+ *
+ * lhs string must have enough space to store rhs string
+ * \param line String which we want to split to substrings 
+ * \param argc Number of substrings 
+ * \param argv Array of substrings 
+ * \param delimiter String which contatins delimiters
+ * \return Return 1 if max number of substrings is exceeded 
+ * */
+uint8_t string_split(char * line, uint8_t * argc, char * argv[],char * delimiter);
 
 /*! \brief Convert string to number 
  *
