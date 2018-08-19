@@ -27,7 +27,7 @@
 /*}}}*/
 /*{{{ USSD*/
 #define USSD_ARGC                     2
-#define USSD_NUMBER                   1
+#define USSD_CODE                     1
 /*}}}*/
 /*{{{ SMS*/
 #define SMS_ARGC                      3
@@ -48,11 +48,13 @@
 /*}}}*/
 /*}}}*/
 /*{{{ ERROR CONFIG*/
-#define ARGC_ERROR                    0x01
-#define ARGV_ERROR                    0x02
+#define E_ARGC                        0x01
+#define E_ARGV                        0x02
+#define E_COMMAND                     0x04
 
-#define SET_ARGC_ERROR(err) err|=ARGC_ERROR;
-#define SET_ARGV_ERROR(err) err|=ARGV_ERROR;
+#define SET_E_ARGC(err)               err |= E_ARGC
+#define SET_E_ARGV(err)               err |= E_ARGV
+#define SET_E_COMMAND(err)            err |= E_COMMAND
 /*}}}*/
 
 /*! \struct Command 

@@ -5,14 +5,11 @@
 
 Command commands[NUMBER_OF_COMMANDS] =
 {{"help",help, cli_help},
- {"at",help_at,cli_at}
- /* {"ussd",help_ussd,cli_ussd}, */
- /* {"sms",help_sms,cli_sms}, */
- /* {"call",help_call,cli_call}, */
- /* {"http",help_http,cli_http}, */
-  /* {"adc1",help_adc1,cli_adc1}, */
-  /* {"fir",help_fir,cli_fir}, */
-  /* {"stat", help_stat,cli_stat} */
+ {"at",help_at,cli_at},
+ {"ussd",help_ussd,cli_ussd},
+ {"sms",help_sms,cli_sms},
+ {"call",help_call,cli_call},
+ {"http",help_http,cli_http},
 };
 
 /*{{{ Private*/
@@ -146,15 +143,17 @@ uint8_t cli_at(uint8_t argc, char * argv[],void * generic_ptr)/*{{{ */
   if(argc ==  AT_ARGC)
   {
     sim800_at(argv[AT_CMD]);
-    if (sim800_wait_for_response(argv[AT_RESPONSE]))
+    char response[50];
+    prints(response,"%s\r\n",argv[AT_RESPONSE]);
+    if (sim800_wait_for_response(response))
     {
-      print("AT COMMAND TIMEOUT\n");
+      SET_E_COMMAND(error);
     }
 
   }
   else
   {
-    SET_ARGC_ERROR(error);
+    SET_E_ARGC(error);
   }
   return error;
 }/*}}}*/
@@ -173,21 +172,16 @@ uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   uint8_t error = 0;
   if(argc ==  USSD_ARGC)
   {
-    /* sim800_at("AT+CSCS=\"GSM\""); */
-    /* print("%s",sim800_at_rx_data(2)); */
-    /* char * command = prints("AT+CUSD=1,\"%s\",15",argv[USSD_NUMBER]); */
-    /* sim800_at(command); */
-    /* print("%s",sim800_at_rx_data(2)); */
-    /* print(DIM BLUE"Wait for USSD response: \n" RESET); */
-    /* print("%s",sim800_at_rx_data(2)); */
+    if(sim800_ussd(argv[USSD_CODE]))
+    {
+      SET_E_COMMAND(error);
+    }
   }
   else
   {
-    SET_ARGC_ERROR(error);
+    SET_E_ARGC(error);
   }
   return error;
-
-  return 0;
 }/*}}}*/
 /*}}}*/
 /*{{{ SMS*/
@@ -205,18 +199,19 @@ uint8_t cli_sms(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   uint8_t error = 0;
   if(argc ==  SMS_ARGC)
   {
-    /* sim800_sms(argv[SMS_NUMBER],argv[SMS_MESSAGE]); */
+    if(sim800_sms(argv[SMS_NUMBER],argv[SMS_MESSAGE]))
+    {
+      SET_E_COMMAND(error);
+    }
   }
   else
   {
-    SET_ARGC_ERROR(error);
+    SET_E_ARGC(error);
   }
   return error;
-
-  return 0;
 }/*}}}*/
 /*}}}*/
-/*{{{ USSD*/
+/*{{{ CALL*/
 void help_call()/*{{{*/
 {
   print(BLUE"\t->"RED" call num/end " BLUE "- Call desired number \n");
@@ -235,16 +230,22 @@ uint8_t cli_call(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   {
     if(string_cmp(argv[CALL_END],"end") == 0)
     {
-      /* sim800_call(0,SIM800_CALL_END); */
+      if(sim800_call(0,SIM800_CALL_END))
+      {
+        SET_E_COMMAND(error);
+      }
     }
     else
     {
-      /* sim800_call(argv[CALL_NUMBER],SIM800_CALL); */
+      if(sim800_call(argv[CALL_NUMBER],SIM800_CALL))
+      {
+        SET_E_COMMAND(error);
+      }
     }
   }
   else
   {
-    SET_ARGC_ERROR(error);
+    SET_E_ARGC(error);
   }
   return error;
 }/*}}}*/
@@ -269,29 +270,30 @@ uint8_t cli_http(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   uint8_t error = 0;
   if ((argc ==  HTTP_ARGC_GET) && (string_cmp(argv[HTTP_REQUEST],"get") == 0))
   {
-    print("SYS-> GET REQUEST\n");
-    /* sim800_http(SIM800_HTTP_GET,argv[HTTP_SITE],0); */
-    /* if(string_cmp(argv[CALL_END],"end") == 0) */
-    /* { */
-    /* sim800_call(0,SIM800_CALL_END); */
-    /* } */
-    /* else */
-    /* { */
-    /* sim800_call(argv[CALL_NUMBER],SIM800_CALL); */
-    /* } */
+    char data[100];
+    if(sim800_http(SIM800_HTTP_GET,argv[HTTP_SITE],data))
+    {
+      SET_E_COMMAND(error);
+    }
+    else
+    {
+      print("DATA:\n%s\n",data);
+    }
   }
   else if (argc == HTTP_ARGC_POST && (string_cmp(argv[HTTP_REQUEST],"post") == 0) )
   {
-    print("SYS-> POST REQUEST\n");
-    /* sim800_http(SIM800_HTTP_POST,argv[HTTP_SITE],argv[HTTP_DATA]); */
+    if(sim800_http(SIM800_HTTP_POST,argv[HTTP_SITE],argv[HTTP_DATA]))
+    {
+      SET_E_COMMAND(error);
+    }
   }
   else if (argc == HTTP_ARGC_GET || argc == HTTP_ARGC_POST)
   {
-    SET_ARGV_ERROR(error);
+    SET_E_ARGV(error);
   }
   else
   {
-    SET_ARGC_ERROR(error);
+    SET_E_ARGC(error);
   }
   return error;
 }/*}}}*/
