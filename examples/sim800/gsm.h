@@ -15,6 +15,10 @@
 #define sim800_usart_tx_byte(data)                usart_tx_byte(USART3,data)
 #define sim800_usart_rx_byte()                    usart_rx_byte(USART3)
 /*}}}*/
+/*{{{ SIM800 RESPONSE CHECK*/
+#define SIM800_RESPONSE_OK        0x00 
+#define SIM800_RESPONSE_TIMEOUT   0x01 
+/*}}}*/
 
 /*{{{ SIM800 CALL*/
 #define SIM800_CALL               0x01
@@ -55,5 +59,7 @@ ent* \return Return received string
 char * sim800_at_rx_data(uint8_t line_cnt);
 
 uint8_t sim800_sms(char * number, char * message);
+
+uint8_t sim800_ussd(char * ussd);
 #endif /* ifndef __SIM800_H */
 
