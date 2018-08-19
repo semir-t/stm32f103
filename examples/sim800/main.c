@@ -41,18 +41,22 @@ int main(void)
       }
       else
       {
-        SET_ARGC_ERROR(error);
+        SET_E_ARGC(error);
       }
       print(DIM);
-      if(error & ARGV_ERROR)
+      if(error & E_ARGV)
       {
         print(RED "  %s:" BLUE"some of arguments do not have correct type!\n",commands[cmd_number]._name);
 
       }
-      else if(error & ARGC_ERROR)
+      else if(error & E_ARGC)
       {
         print(RED "  ERROR:" BLUE" unknown command\n");
 
+      }
+      else if(error & E_COMMAND)
+      {
+        print(RED "  ERROR:" BLUE" something went wrong while executing command\n");
       }
       print(RESET);
     }
