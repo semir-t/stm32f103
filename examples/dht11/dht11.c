@@ -19,15 +19,6 @@ static void dht11_pin_output(void)/*{{{*/
   GPIOA->CRL |= 0x00000003;     // set A0 as output, push-pull
   GPIOA->ODR = 0x0001;
 }/*}}}*/
-static void dht11_timer(void)/*{{{*/
-{
-  RCC->APB1ENR |= RCC_APB1ENR_TIM4EN; // enable clock for TIM4 (72MHz)
-  TIM4->CR1 |= TIM_CR1_ARPE;   // Enable auto-reload register
-  TIM4->PSC = 72 - 1; // output clock will be 72 MHz
-  TIM4->ARR = 65000; // over flow will accure every us
-  TIM4->EGR |= TIM_EGR_UG;
-  TIM4->CR1 |= TIM_CR1_CEN;
-}/*}}}*/
 /*}}}*/
 /*{{{ Public*/
 void dht11_init(void)/*{{{*/
@@ -51,44 +42,35 @@ uint8_t dht11_read(uint8_t * data)/*{{{*/
 
 	
   dht11_pin_output();
-	//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 	// generate start condition
-	//------------------------------------------------------------------
   DHT11_PIN_LOW;								// set low state for at least 18 ms
 	delay_ms(20);
 	
   DHT11_PIN_HIGH;								// set low state for at least 18 ms
 	delay_us(20);
 	
-  /* dht11_timer(); */
   dht11_pin_input();
-	
-	//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 	// wait for response
-	//------------------------------------------------------------------
-	while(DHT11_PIN_READ && (timeout--))
+  while(DHT11_PIN_READ && (timeout--))
   {
     delay_us(1);
-	  // wait for high to low transition
+    // wait for high to low transition
   }
   timeout = timeout == 0 ? 0 : DHT11_TIMEOUT;
-	while(!DHT11_PIN_READ && (timeout--))
+  while(!DHT11_PIN_READ && (timeout--))
   {
     delay_us(1);
-	  // wait for low to high transition 
+    // wait for low to high transition 
   }
   timeout = timeout == 0 ? 0 : DHT11_TIMEOUT;
-	//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-	// read the data from DHT11
-	//------------------------------------------------------------------
-  //
-	while(DHT11_PIN_READ && (timeout--))
+
+  // read the data from DHT11
+  while(DHT11_PIN_READ && (timeout--))
   {
     delay_us(1);
-  // wait for low
+    // wait for low
   }
   timeout = timeout == 0 ? 0 : DHT11_TIMEOUT;
-	//wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
   time = 0; 
   for (k=0; (k<40) && timeout;k++)
   {
@@ -108,9 +90,7 @@ uint8_t dht11_read(uint8_t * data)/*{{{*/
     timeout = timeout == 0 ? 0 : DHT11_TIMEOUT;
   }
 
-  //wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
   // decode time periods into bits for actual data
-  //------------------------------------------------------------------
   m = 0;
   for(k=0;k<5;k++)
   {
