@@ -3,7 +3,7 @@
 #include "usart.h"
 #include "print.h"
 #include "cli.h"
-#include "sim800.h"
+#include "gsm.h"
 #include "cstring.h"
 
 extern Command commands[NUMBER_OF_COMMANDS];

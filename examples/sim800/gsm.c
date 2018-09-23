@@ -205,6 +205,7 @@ uint8_t sim800_ussd(char * ussd)/*{{{*/
       print("%s",ussd_response);
     }
   }
+  sim800_buffer_flush();
   return status;
 }/*}}}*/
 uint8_t sim800_http(uint8_t request,char * site,uint8_t * data,uint16_t cnt)/*{{{*/

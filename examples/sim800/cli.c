@@ -1,6 +1,6 @@
 #include "cli.h"
 #include "delay.h"
-#include "sim800.h"
+#include "gsm.h"
 #include "cstring.h"
 
 Command commands[NUMBER_OF_COMMANDS] =
@@ -172,6 +172,7 @@ uint8_t cli_ussd(uint8_t argc, char * argv[], void * generic_ptr)/*{{{*/
   uint8_t error = 0;
   if(argc ==  USSD_ARGC)
   {
+    print("SYS-> USSD\n");
     if(sim800_ussd(argv[USSD_CODE]))
     {
       SET_E_COMMAND(error);
